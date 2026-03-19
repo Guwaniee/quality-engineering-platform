@@ -1,0 +1,51 @@
+name: CI - QA Automation
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps
+
+      - name: Run API tests (coverage + report)
+        run: |
+          python -m pytest -q tests/api --cov=app --cov-report=term-missing --html=reports/api_report.html --self-contained-html
+
+      - name: Start API server
+        run: |
+          nohup uvicorn app.main:app --host 127.0.0.1 --port 8000 &
+          sleep 2
+
+      - name: Run E2E tests (report)
+        run: |
+          python -m pytest -q tests/e2e --html=reports/e2e_report.html --self-contained-html
+
+      - name: Run UI tests (report + artifacts)
+        run: |
+          python -m pytest -q tests/ui --html=reports/ui_report.html --self-contained-html --screenshot=only-on-failure --video=retain-on-failure
+
+      - name: Upload artifacts (reports + screenshots/videos)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-artifacts
+          path: |
+            reports
+            test-results
