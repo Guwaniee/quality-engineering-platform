@@ -1,0 +1,1 @@
+![CI](https://github.com/Guwaniee/quality-engineering-platform/actions/workflows/ci.yml/badge.svg)
