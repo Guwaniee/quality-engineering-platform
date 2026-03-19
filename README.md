@@ -17,13 +17,18 @@ Python, FastAPI, Pytest, Playwright, GitHub Actions, pytest-html, pytest-cov
 
 ## Quickstart
 
-### Install
+### 1. Install Dependencies
 ```bash
 make install
+``` 
 
-**### Run API**
+### 2. Run & Test
 ```bash
+# This starts your FastAPI server
 make run
+
+# These run your Pytest suites
 make test-api
 make test-ui
 make test-e2e
+``` 
