@@ -20,3 +20,10 @@ Python, FastAPI, Pytest, Playwright, GitHub Actions, pytest-html, pytest-cov
 ### Install
 ```bash
 make install
+
+**### Run API**
+```bash
+make run
+make test-api
+make test-ui
+make test-e2e
